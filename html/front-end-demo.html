@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Front End demo</title>
+    <style>
+        .post {
+            padding: 16px;
+            background-color: red;
+            color: white;
+            margin: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Blog Posts</h1>
+    <div id="blogposts">
+
+    </div>
+
+    <script>
+        async function getBlogPosts() {
+            let url = "https://jsonplaceholder.typicode.com/posts"
+            const response = await fetch(url);
+            const posts = await response.json();
+            displayPosts(posts)
+        }
+
+        function displayPosts(posts) {
+            const container = document.getElementById('blogposts');
+
+            posts.forEach(post => {
+                // Create a div element for each post
+                const postDiv = document.createElement('div');
+                postDiv.classList.add('post');
+
+                // Create the post title and content elements
+                const title = document.createElement('h2');
+                title.innerText = post.title;
+
+                const content = document.createElement('p');
+                content.innerText = post.body;
+
+                // Append title and content to the postDiv
+                postDiv.appendChild(title);
+                postDiv.appendChild(content);
+
+                // Append postDiv to the container
+                container.appendChild(postDiv);
+            });
+        }
+
+        window.onload = getBlogPosts;
+    </script>
+</body>
+
+</html>

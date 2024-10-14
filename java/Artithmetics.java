@@ -24,7 +24,7 @@ class Arithmetics {
         System.out.println(e);
 
         //BODMAS -> Brackets, Division, Mutliplication, Addition, Subraction
-        int x = (15 + 40) - 54 * (20 / 10);
+        int x = 15 + 40 - 54 * 20 / 10;
         System.out.println(x);
     }
 }

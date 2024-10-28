@@ -1,19 +1,4 @@
 
-class CarDemo {
-
-    public static void main(String[] args) {
-        Car myCar = new Car();
-
-        myCar.runCar(10, 3.0F, "Karungal");
-        myCar.print();
-        myCar.runCar(20, 5.0F, "Nagercoil");
-        myCar.print();
-        myCar.runCar(60, 9.0F, "Marthandam");
-        myCar.print();
-    }
-
-}
-
 class Car {
 
     int doors = 4;
@@ -42,6 +27,10 @@ class Car {
         System.out.println("Car has Run " + this.kms + " Kms");
         System.out.println("Car Temp " + this.temp + " C");
         System.out.println("Car Location " + this.location);
+    }
+
+    static void test() {
+        System.out.println("this can be called directly");
     }
 
 }

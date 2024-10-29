@@ -1,11 +1,11 @@
 
 class Car {
 
-    int doors = 4;
-    int wheels = 4;
-    int kms = 0;
-    float temp;
-    String location;
+    public int doors = 4;
+    public int wheels = 4;
+    public int kms = 0;
+    public float temp;
+    public String location;
 
     //<public/private> <static> <datatype> <function name> () {}
     void start() {
@@ -31,6 +31,10 @@ class Car {
 
     static void test() {
         System.out.println("this can be called directly");
+    }
+
+    public Car(String name) {
+        System.out.println(name);
     }
 
 }

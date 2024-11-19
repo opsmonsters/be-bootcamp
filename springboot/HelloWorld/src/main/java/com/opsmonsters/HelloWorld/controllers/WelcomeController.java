@@ -25,6 +25,12 @@ public class WelcomeController {
         return voteEligibleResponseDto;
     }
 
+    @GetMapping("/users/{userId}")
+    public int getUserId(@PathVariable int userId){
+       return userId;
+    }
+
+
     @PostMapping("/test-json")
     public VoteEligibleResponseDto testJsonPost(@RequestBody VoteEligibleRequestDto requestDto){
         VoteEligibleResponseDto responseDto = new VoteEligibleResponseDto();

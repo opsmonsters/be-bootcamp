@@ -16,6 +16,19 @@ public class Posts {
     @Column(name = "likes")
     private int likes;
 
+
+    @JoinColumn(name = "user_id")
+    @ManyToOne
+    User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public int getPostId() {
         return postId;
     }

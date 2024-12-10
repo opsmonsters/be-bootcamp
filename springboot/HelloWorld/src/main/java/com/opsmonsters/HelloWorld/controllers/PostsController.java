@@ -2,10 +2,13 @@ package com.opsmonsters.HelloWorld.controllers;
 
 import com.opsmonsters.HelloWorld.dto.PostDto;
 import com.opsmonsters.HelloWorld.models.Posts;
+import com.opsmonsters.HelloWorld.models.User;
 import com.opsmonsters.HelloWorld.repo.PostRepo;
+import com.opsmonsters.HelloWorld.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,11 +19,21 @@ public class PostsController {
     @Autowired
     PostRepo postRepo;
 
+    @Autowired
+    UserRepo userRepo;
+
     @PostMapping("/posts")
     public String createNewPosts(@RequestBody PostDto requestDto){
         Posts post = new Posts();
         post.setContent(requestDto.getPostContent());
         post.setLikes(requestDto.getLikes());
+
+        Optional<User> optionalUser = userRepo.findById(requestDto.getUserId());
+        if(optionalUser.isPresent()){
+            post.setUser(optionalUser.get());
+        }else{
+           return "User Id does not exists";
+        }
 
         postRepo.save(post);
 
@@ -28,9 +41,21 @@ public class PostsController {
     }
 
     @GetMapping("/posts")
-    public List<Posts> getAllPosts(){
+    public List<PostDto> getAllPosts(){
         List<Posts> postsList = postRepo.findAll();
-        return postsList;
+        List<PostDto> postDtoList = new ArrayList<>();
+        for(Posts post : postsList){
+           PostDto postDto = new PostDto();
+           postDto.setPostContent(post.getContent());
+           postDto.setId(post.getPostId());
+           postDto.setLikes(post.getLikes());
+           postDto.setUserFirstName(post.getUser().getFirstName());
+           postDto.setUserLastName(post.getUser().getLastName());
+           postDto.setUserId(post.getUser().getUserId());
+           postDtoList.add(postDto);
+        }
+
+        return postDtoList;
     }
 
     @GetMapping("/posts/{postId}")

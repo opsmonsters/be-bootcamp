@@ -5,6 +5,7 @@ import com.opsmonsters.HelloWorld.dto.UserDto;
 import com.opsmonsters.HelloWorld.models.User;
 import com.opsmonsters.HelloWorld.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,13 +17,17 @@ public class UserController {
     @Autowired
     UserDao userDao;
 
-    @PostMapping("/users")
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @PostMapping("/auth/signup")
     public String createUser(@RequestBody UserDto dto){
         User user = new User();
         user.setFirstName(dto.getFirstName());
         user.setLastName(dto.getLastName());
         user.setAddress(dto.getAddress());
-        user.setPassword(dto.getPassword());
+        user.setEmail(dto.getEmail());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setGender(dto.getGender());
 
         userRepo.save(user);

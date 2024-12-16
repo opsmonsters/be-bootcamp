@@ -17,7 +17,7 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
-    private String secretKey = "MYJWTSUPERSECRECTKEYasfdfasdfasd234234234";
+    private String secretKey = "b6da2e585f1755f45c56c5c4e032247a8a3023381ecc63eba238274fbd57ee03";
 
     private long jwtExpiration = 3600000;
 

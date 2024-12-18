@@ -1,6 +1,7 @@
 package com.opsmonsters.HelloWorld.config;
 
 import com.opsmonsters.HelloWorld.services.JwtService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,10 +12,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.io.IOException;
 
@@ -44,7 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response); // Continue with the filter chain if no Authorization header
             return;
         }
 
@@ -69,9 +72,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
 
-            filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response); // Continue with the filter chain
         } catch (Exception exception) {
-            handlerExceptionResolver.resolveException(request, response, null, exception);
+            // This is where you can set custom response status codes
+            if (exception instanceof UsernameNotFoundException ) {
+                // Handle the case when user is not found or token is invalid
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Unauthorized - Invalid Token or User Not Found");
+            } else if (exception instanceof NoHandlerFoundException) {
+                // Handle 404 explicitly
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                response.getWriter().write("Resource not found");
+            }else if(exception instanceof ExpiredJwtException){
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("Your Token has expired");
+            } else {
+                // Handle other errors
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                exception.printStackTrace();
+                response.getWriter().write("Internal Server Error");
+            }
         }
     }
+
 }
